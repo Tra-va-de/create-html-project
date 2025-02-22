@@ -41,7 +41,7 @@ mkdir "%docs_path%" "%css_path%" "%img_path%" "%html_path%"
 
 :: Создаем базовый index.html с разметкой
 (
-    echo ^<^!DOCTYPE html^>
+    echo ^<^^!DOCTYPE html^>
     echo ^<html lang="ru"^>
     echo ^<head^>
     echo     ^<meta charset="UTF-8"^>
