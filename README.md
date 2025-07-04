@@ -50,4 +50,4 @@ prX/  (new project folder)
 </ol>
 
 <h2>License</h2>
-<p>This project is licensed under the MIT License.</p>
+<p>This project is licensed under the <a href="https://opensource.org/licenses/MIT">MIT</a> License.</p>
