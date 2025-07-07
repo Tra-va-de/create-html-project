@@ -549,10 +549,67 @@ echo // Navigation > "%scss_path%\components\_navigation.scss"
 echo. > "%css_path%\style.css"
 echo. > "%css_path%\style.min.css"
 
+:: Создаём justfile для PowerShell
+(
+    echo # Указываем PowerShell как оболочку
+    echo set shell := ["powershell.exe", "-Command"]
+    echo.
+    echo # Создание новой ветки от main с вводом названия и переключение на нее
+    echo create-branch:
+    echo     $branchName = Read-Host "Введите название новой ветки"; ^\
+    echo     git checkout main; ^\
+    echo     git branch $branchName; ^\
+    echo     git checkout $branchName; ^\
+    echo     git branch --show-current
+    echo.
+    echo # Коммит и отправка изменений в текущую ветку
+    echo push-current:
+    echo     $commitMessage = Read-Host "Введите сообщение для коммита"; ^\
+    echo     git add .; ^\
+    echo     git commit -m $commitMessage; ^\
+    echo     git push origin (git branch --show-current^)
+    echo.
+    echo # Слияние текущей ветки в main и публикация
+    echo merge-current:
+    echo     $currentBranch = (git branch --show-current^); ^\
+    echo     git checkout main; ^\
+    echo     git merge $currentBranch; ^\
+    echo     git push origin main
+    echo.
+    echo # Слияние изменений из указанной ветки в main и публикация
+    echo merge-to-main:
+    echo     git checkout main; ^\
+    echo     $branchName = Read-Host "Введите название ветки для слияния"; ^\
+    echo     git merge $branchName; ^\
+    echo     git push origin main
+    echo.
+    echo # Отправка изменений текущей ветки и слияние с main с публикацией
+    echo push-and-merge:
+    echo     $commitMessage = Read-Host "Введите сообщение для коммита"; ^\
+    echo     git add .; ^\
+    echo     git commit -m $commitMessage; ^\
+    echo     $currentBranch = (git branch --show-current^); ^\
+    echo     git push origin $currentBranch; ^\
+    echo     git checkout main; ^\
+    echo     git merge $currentBranch; ^\
+    echo     git push origin main
+    echo.
+    echo # Откат последнего слияния в main и изменений в исходной ветке
+    echo undo-last:
+    echo     $mergedBranch = (git log -1 --merges --format=%%s ^| ForEach-Object { $_ -replace '^^Merge branch ''(.+^)''.*$', '$1' }^); ^\
+    echo     git reset --hard HEAD^^; ^\
+    echo     git push origin main --force; ^\
+    echo     git checkout $mergedBranch; ^\
+    echo     git reset --hard HEAD^^; ^\
+    echo     git push origin $mergedBranch --force; ^\
+    echo     git checkout main
+) > "%new_project_path%\.justfile"
+
 :: Создаем .gitignore и добавляем в него исключения
 (
     echo docs/
     echo .gitignore
+    echo .justfile
     echo .sass-cache/
     echo *.css.map
 ) > "%new_project_path%\.gitignore"
