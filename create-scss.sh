@@ -546,10 +546,74 @@ echo "// Navigation" > "$scss_path/components/_navigation.scss"
 touch "$css_path/style.css"
 touch "$css_path/style.min.css"
 
+cat > "$new_project_path/.justfile" << 'EOF'
+# Указываем оболочку по умолчанию для Linux
+set shell := ["bash", "-uc"]
+
+# Создание новой ветки от main с вводом названия и переключение на нее
+create-branch:
+    read -p "Введите название новой ветки: " branchName && \
+    git checkout main && \
+    git branch "$branchName" && \
+    git checkout "$branchName" && \
+    git branch --show-current
+
+# Коммит и отправка изменений в текущую ветку
+push-current:
+    read -p "Введите сообщение для коммита: " commitMessage && \
+    git add . && \
+    git commit -m "$commitMessage" && \
+    git push origin $(git branch --show-current)
+
+# Слияние текущей ветки в main и публикация
+merge-current:
+    currentBranch=$(git branch --show-current) && \
+    git checkout main && \
+    git merge --no-ff "$currentBranch" -m "merge from $currentBranch" && \
+    git push origin main
+
+# Слияние изменений из указанной ветки в main и публикация
+merge-to-main:
+    git checkout main && \
+    read -p "Введите название ветки для слияния: " branchName && \
+    git merge --no-ff "$branchName" -m "merge from $branchName" && \
+    git push origin main
+
+# Отправка изменений текущей ветки и слияние с main с публикацией
+push-and-merge:
+    read -p "Введите сообщение для коммита: " commitMessage && \
+    git add . && \
+    git commit -m "$commitMessage" && \
+    currentBranch=$(git branch --show-current) && \
+    git push origin "$currentBranch" && \
+    git checkout main && \
+    git merge --no-ff --no-edit "$currentBranch" && \
+    git push origin main
+
+# Откат последнего коммита в текущей ветке
+undo-last-commit:
+    currentBranch=$(git branch --show-current) && \
+    git reset --hard HEAD^ && \
+    git push origin main --force
+
+# Откат последнего слияния в main и изменений в исходной ветке
+undo-last-merge:
+    git checkout main && \
+    mergedBranch=$(git for-each-ref --format='%(refname:short)' refs/heads/ | grep -v '^main$' | while read branch; do \
+                   if git merge-base --is-ancestor $(git rev-list --parents -n 1 $(git log --merges -1 --pretty=%H) | awk '{print $3}') $branch; then \
+                   echo $branch; break; fi; done) && \
+    git reset --hard HEAD^ && \
+    git push origin main --force && \
+    git checkout $mergedBranch && \
+    git reset --hard HEAD^ && \
+    git push origin $mergedBranch --force
+EOF
+
 # Создаем .gitignore и добавляем в него исключения
 cat << EOF > "$new_project_path/.gitignore"
 docs/
 .gitignore
+.justfile
 .sass-cache/
 *.css.map
 EOF
