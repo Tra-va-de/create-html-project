@@ -569,14 +569,14 @@ push-current:
 merge-current:
     currentBranch=$(git branch --show-current) && \
     git checkout main && \
-    git merge --no-ff "$currentBranch" -m "merge from $currentBranch" && \
+    git merge --no-ff --no-edit "$currentBranch" && \
     git push origin main
 
 # Слияние изменений из указанной ветки в main и публикация
 merge-to-main:
     git checkout main && \
     read -p "Введите название ветки для слияния: " branchName && \
-    git merge --no-ff "$branchName" -m "merge from $branchName" && \
+    git merge --no-ff --no-edit "$branchName" && \
     git push origin main
 
 # Отправка изменений текущей ветки и слияние с main с публикацией
