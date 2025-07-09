@@ -106,7 +106,7 @@ echo. > "%css_path%\style.css"
     echo # Откат последнего коммита в текущей ветке
     echo undo-last-commit:
     echo     $currentBranch = (git branch --show-current^); ^\
-    echo     git reset --hard HEAD^^; ^\
+    echo     git reset --mixed HEAD^^; ^\
     echo     git push origin $currentBranch --force
     echo.
     echo # Откат последнего слияния в main и изменений в исходной ветке
@@ -122,7 +122,7 @@ echo. > "%css_path%\style.css"
     echo    if ($mergedBranch^) { \
     echo        Write-Host "Найдена ветка: $mergedBranch"; \
     echo        git checkout $mergedBranch; \
-    echo        git reset --hard HEAD^^; \
+    echo        git reset --mixed HEAD^^; \
     echo        git push origin $mergedBranch --force; \
     echo        Write-Host "Откат завершен. Main и ветка $mergedBranch откачены на один commit назад."; \
     echo    } else { \
