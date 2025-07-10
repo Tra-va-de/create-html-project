@@ -593,7 +593,7 @@ push-and-merge:
 # Откат последнего коммита в текущей ветке
 undo-last-commit:
     currentBranch=$(git branch --show-current) && \
-    git reset --hard HEAD^ && \
+    git reset --mixed HEAD^ && \
     git push origin $currentBranch --force
 
 # Откат последнего слияния в main и изменений в исходной ветке
@@ -605,7 +605,7 @@ undo-last-merge:
     git reset --hard HEAD^ && \
     git push origin main --force && \
     git checkout $mergedBranch && \
-    git reset --hard HEAD^ && \
+    git reset --mixed HEAD^ && \
     git push origin $mergedBranch --force
 EOF
 
