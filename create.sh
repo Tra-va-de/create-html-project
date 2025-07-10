@@ -104,7 +104,7 @@ push-and-merge:
 undo-last-commit:
     currentBranch=$(git branch --show-current) && \
     git reset --hard HEAD^ && \
-    git push origin main --force
+    git push origin $currentBranch --force
 
 # Откат последнего слияния в main и изменений в исходной ветке
 undo-last-merge:

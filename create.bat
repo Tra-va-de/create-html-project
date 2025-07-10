@@ -82,14 +82,14 @@ echo. > "%css_path%\style.css"
     echo merge-current:
     echo     $currentBranch = (git branch --show-current^); ^\
     echo     git checkout main; ^\
-    echo     git merge $currentBranch; ^\
+    echo     git merge --no-ff --no-edit $currentBranch; ^\
     echo     git push origin main
     echo.
     echo # Слияние изменений из указанной ветки в main и публикация
     echo merge-to-main:
     echo     git checkout main; ^\
     echo     $branchName = Read-Host "Введите название ветки для слияния"; ^\
-    echo     git merge $branchName; ^\
+    echo     git merge --no-ff --no-edit $branchName; ^\
     echo     git push origin main
     echo.
     echo # Отправка изменений текущей ветки и слияние с main с публикацией
@@ -100,18 +100,35 @@ echo. > "%css_path%\style.css"
     echo     $currentBranch = (git branch --show-current^); ^\
     echo     git push origin $currentBranch; ^\
     echo     git checkout main; ^\
-    echo     git merge $currentBranch; ^\
+    echo     git merge --no-ff --no-edit $currentBranch; ^\
     echo     git push origin main
     echo.
+    echo # Откат последнего коммита в текущей ветке
+    echo undo-last-commit:
+    echo     $currentBranch = (git branch --show-current^); ^\
+    echo     git reset --mixed HEAD^^; ^\
+    echo     git push origin $currentBranch --force
+    echo.
     echo # Откат последнего слияния в main и изменений в исходной ветке
-    echo undo-last:
-    echo     $mergedBranch = (git log -1 --merges --format=%%s ^| ForEach-Object { $_ -replace '^^Merge branch ''(.+^)''.*$', '$1' }^); ^\
-    echo     git reset --hard HEAD^^; ^\
-    echo     git push origin main --force; ^\
-    echo     git checkout $mergedBranch; ^\
-    echo     git reset --hard HEAD^^; ^\
-    echo     git push origin $mergedBranch --force; ^\
-    echo     git checkout main
+    echo undo-last-merge:
+    echo    git checkout main; \
+    echo    $lastMergeCommit = (git log --merges -1 --format="%%H"^); \
+    echo    $parentCommits = (git log --merges -1 --format="%%P"^); \
+    echo    $firstParent = ($parentCommits -split " "^)[0]; \
+    echo    $secondParent = ($parentCommits -split " "^)[1]; \
+    echo    git reset --hard $firstParent; \
+    echo    git push origin main --force; \
+    echo    $mergedBranch = (git branch --contains $secondParent ^| Where-Object { ^$_ -notmatch "^\*" } ^| ForEach-Object { ^$_.Trim(^) } ^| Select-Object -First 1^); \
+    echo    if ($mergedBranch^) { \
+    echo        Write-Host "Найдена ветка: $mergedBranch"; \
+    echo        git checkout $mergedBranch; \
+    echo        git reset --mixed HEAD^^; \
+    echo        git push origin $mergedBranch --force; \
+    echo        Write-Host "Откат завершен. Main и ветка $mergedBranch откачены на один commit назад."; \
+    echo    } else { \
+    echo        Write-Host "Откат завершен. Main откачен на один commit назад."; \
+    echo    }
+
 ) > "%new_project_path%\.justfile"
 
 :: Создаем .gitignore и добавляем в него исключения
