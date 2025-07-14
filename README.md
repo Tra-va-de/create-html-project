@@ -64,8 +64,11 @@ prX/  (new project folder)
   <li>Creates SCSS 7-1 structure with <code>src/scss</code> and subfolders: <code>abstracts</code>, <code>base</code>, <code>components</code>, <code>layout</code>, <code>pages</code>, <code>themes</code>, <code>vendors</code>.</li>
   <li>Generates pre-populated <code>index.html</code> with linked <code>style.min.css</code>.</li>
   <li>Generates pre-populated <code>style.scss</code> with 7-1 imports and <code>scss/abstracts/_variables.scss</code>, <code>scss/abstracts/_functions.scss</code>, <code>scss/abstracts/_mixins.scss</code>, <code>scss/abstracts/_extends.scss</code>, <code>scss/base/_reset.scss</code>.</li>
-  <li>Creates <code>src/css/style.css</code>, <code>src/css/style.min.css</code>, and <code>.gitignore</code> excluding <code>docs</code>, <code>.sass-cache</code>, <code>*.css.map</code>, and <code>.gitignore</code>.</li>
+  <li>Creates <code>src/css/style.css</code>, <code>src/css/style.min.css</code>, and <code>.gitignore</code> excluding <code>docs</code>, <code>.sass-cache</code>, <code>*.css.map</code>, <code>.gitignore</code>, and now also <code>.justfile</code>.</li>
 </ul>
+
+<h2>Justfile & Git Automation</h2>
+<p>Each script now automatically generates a <code>.justfile</code> in the new project folder. This file contains ready-to-use git recipes for branch management, commits, merges, and undoing the last commit or merge. The justfile is tailored for your OS (Bash for Linux/macOS, PowerShell for Windows) and simplifies common git operations with easy commands.</p>
 
 <h2>Installation and Usage</h2>
 <h3>For Windows</h3>

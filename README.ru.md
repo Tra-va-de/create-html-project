@@ -64,8 +64,11 @@ prX/  (new project folder)
     <li>Создает структуру SCSS 7-1 с <code>src/scss</code> и подпапками: <code>abstracts</code>, <code>base</code>, <code>components</code>, <code>layout</code>, <code>pages</code>, <code>themes</code>, <code>vendors</code>.</li>
     <li>Генерирует предзаполненный <code>index.html</code> с подключением <code>style.min.css</code>.</li>
     <li>Генерирует предзаполненный <code>style.scss</code> с импортами 7-1 и <code>scss/abstracts/_variables.scss</code>, <code>scss/abstracts/_functions.scss</code>, <code>scss/abstracts/_mixins.scss</code>, <code>scss/abstracts/_extends.scss</code>, <code>scss/base/_reset.scss</code>.</li>
-    <li>Создает <code>src/css/style.css</code>, <code>src/css/style.min.css</code> и <code>.gitignore</code>, исключающий <code>docs</code>, <code>.sass-cache</code>, <code>*.css.map</code> и сам <code>.gitignore</code>.</li>
+    <li>Создаёт <code>src/css/style.css</code>, <code>src/css/style.min.css</code> и <code>.gitignore</code>, исключающий <code>docs</code>, <code>.sass-cache</code>, <code>*.css.map</code>, сам <code>.gitignore</code>, а теперь также <code>.justfile</code>.</li>
 </ul>
+
+<h2>Justfile и автоматизация Git</h2>
+<p>Теперь каждый скрипт автоматически создаёт файл <code>.justfile</code> в новой папке проекта. В этом файле содержатся готовые рецепты для работы с git: управление ветками, коммиты, слияния, откат последнего коммита или слияния. Justfile подбирается под вашу ОС (Bash для Linux/macOS, PowerShell для Windows) и упрощает типовые git-операции с помощью простых команд.</p>
 
 <h2>Установка и запуск</h2>
 <h3>Для Windows</h3>
